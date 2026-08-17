@@ -1,0 +1,7 @@
+-r requirements.txt
+transformers>=4.45
+peft>=0.13
+datasets>=2.20
+accelerate>=0.34
+# bitsandbytes>=0.43
+# llama-cpp-python>=0.3
