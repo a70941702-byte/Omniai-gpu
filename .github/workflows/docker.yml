@@ -1,0 +1,36 @@
+name: Build GPU Docker Image
+on:
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unzip template
+        run: |
+          unzip -o omniai-gpu-template.zip
+          rm omniai-gpu-template.zip
+
+      - name: Commit unzipped files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Unzip GPU template
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.actor }}/omniai-gpu:latest
